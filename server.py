@@ -38,8 +38,8 @@ def send_messages_to_all(message):
 # Function to handle client
 def client_handler(client):
     
-    # Server will listen for client message that will
-    # Contain the username
+    # Server will listen for the client message that will
+    # contain the username
     while True:
 
         username = client.recv(2048).decode('utf-8')
@@ -47,9 +47,13 @@ def client_handler(client):
             online_clients.append((username, client))
             prompt_message = "SERVER~" + f"{username} added to the chat"
             send_messages_to_all(prompt_message)
+            threading.Thread(target=listen_for_messages, args=(client, username, )).start()
             break
         else:
             print("Client username is empty")
+
+    # Rest of your code for handling messages from this client
+
 
     threading.Thread(target=listen_for_messages, args=(client, username, )).start()
 
